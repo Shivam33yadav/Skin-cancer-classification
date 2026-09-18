@@ -139,6 +139,10 @@ row rests on 10 test images and should be read as noise rather than signal.
   are likely within run-to-run variance; distinguishing them properly would need
   repeated seeds and confidence intervals.
 
+
+  ##Live Demo
+  https://github.com/Shivam33yadav/Skin-cancer-classification?utm_source=chatgpt.com
+
 ## Repository layout
 
     src/
