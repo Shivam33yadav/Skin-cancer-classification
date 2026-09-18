@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stratum — A reference for skin cancer classification</title>
+<meta name="description" content="How skin cancers are classified by cell of origin and depth of invasion: basal cell, squamous cell, melanoma subtypes, Merkel cell and rarer tumours, with warning signs and staging.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,500;0,600;1,300&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- reusable lesion glyphs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="g-pearl" viewBox="0 0 46 46">
+      <circle cx="23" cy="23" r="15" fill="#F2E6DC" stroke="#C9A88B" stroke-width="1.2"/>
+      <ellipse cx="18" cy="17" rx="5" ry="3.4" fill="#fff" opacity=".85"/>
+      <path d="M13 27c4-1 6 2 10 1s5-3 9-2" stroke="#B4463C" stroke-width=".9" fill="none"/>
+      <path d="M15 21c3 1 5-1 8 1" stroke="#B4463C" stroke-width=".8" fill="none"/>
+    </symbol>
+    <symbol id="g-scale" viewBox="0 0 46 46">
+      <path d="M11 22c1-8 8-11 14-9s10 6 9 12-6 10-13 9-11-5-10-12z" fill="#EFD4CB" stroke="#C08272" stroke-width="1.2"/>
+      <path d="M14 18h18M13 23h20M15 28h16M18 33h11" stroke="#B57A6A" stroke-width=".9" stroke-dasharray="2 2.5"/>
+    </symbol>
+    <symbol id="g-nodule" viewBox="0 0 46 46">
+      <path d="M9 32c0-10 6-16 14-16s14 6 14 16z" fill="#E8B7A6" stroke="#B4614C" stroke-width="1.2"/>
+      <path d="M9 32h28" stroke="#B4614C" stroke-width="1.2"/>
+      <ellipse cx="18" cy="24" rx="4" ry="2.6" fill="#fff" opacity=".6"/>
+    </symbol>
+    <symbol id="g-irregular" viewBox="0 0 46 46">
+      <path d="M12 20c2-7 9-10 15-7 5 2 9 3 8 9-1 7-4 9-9 11-6 2-12 0-14-5-1-3-1-5 0-8z" fill="#4A3327" stroke="#241812" stroke-width="1.2"/>
+      <path d="M16 17c3 4 3 9 1 13" stroke="#8A6A4E" stroke-width="1" fill="none"/>
+      <path d="M27 15c-1 6 1 11 4 13" stroke="#7A4A3A" stroke-width="1" fill="none"/>
+    </symbol>
+    <symbol id="g-flat" viewBox="0 0 46 46">
+      <path d="M10 23c0-6 6-9 13-9s13 3 13 9-6 9-13 9-13-3-13-9z" fill="#6B4A2F" stroke="#3A2718" stroke-width="1.1" opacity=".9"/>
+      <path d="M16 19c4 1 8 0 12 2" stroke="#2B1C11" stroke-width="1" fill="none"/>
+    </symbol>
+    <symbol id="g-nail" viewBox="0 0 46 46">
+      <rect x="14" y="10" width="18" height="26" rx="7" fill="#F0DCD2" stroke="#C09E90" stroke-width="1.2"/>
+      <rect x="21" y="12" width="4.4" height="22" fill="#2B1C11"/>
+      <path d="M14 15c6-2 12-2 18 0" stroke="#C09E90" stroke-width="1" fill="none"/>
+    </symbol>
+    <symbol id="g-patch" viewBox="0 0 46 46">
+      <path d="M10 18c6-5 14-6 21-3 6 3 6 12 1 16-6 5-16 4-21-1-3-4-3-9-1-12z" fill="#F0D5CE" stroke="#B96F5E" stroke-width="1.2"/>
+      <path d="M13 17l20 14M16 13l16 20" stroke="#B96F5E" stroke-width=".7" opacity=".5"/>
+    </symbol>
+    <symbol id="g-fast" viewBox="0 0 46 46">
+      <path d="M8 33c0-11 7-18 15-18s15 7 15 18z" fill="#E9A0A9" stroke="#A8434F" stroke-width="1.3"/>
+      <path d="M8 33h30" stroke="#A8434F" stroke-width="1.3"/>
+      <path d="M23 8v5M33 12l-3 4M13 12l3 4" stroke="#A8434F" stroke-width="1.3" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#top"><b>Stratum</b><span>Skin cancer reference</span></a>
+    <nav class="tabs" id="tabs">
+      <a href="#basis">Basis</a>
+      <a href="#keratinocyte">Keratinocyte</a>
+      <a href="#melanoma">Melanoma</a>
+      <a href="#rare">Rare types</a>
+      <a href="#signs">Warning signs</a>
+      <a href="#staging">Staging</a>
+      <a href="#checker" class="check">Symptom check</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">A reference for patients, students and carers</span>
+      <h1>Every skin cancer is named for <em>the cell it started in</em> — and staged by <em>how deep it went</em>.</h1>
+      <p class="lede">There is no single disease called skin cancer. There are roughly a dozen distinct tumours arising from different cells in the skin, each with its own appearance, growth pattern and outlook. This page sets them out in the order a pathologist would: by layer, by cell, by depth.</p>
+      <div class="hero-meta">
+        <span class="chip">3 major groups</span>
+        <span class="chip">12+ named subtypes</span>
+        <span class="chip">Depth = prognosis</span>
+      </div>
+    </div>
+
+    <figure class="section-fig">
+      <figcaption><span>Fig. 1 — Cell of origin by layer</span><span>Tap a marker</span></figcaption>
+      <svg viewBox="0 0 420 300" role="img" aria-label="Cross-section of skin showing which layer each type of skin cancer originates in">
+        <g class="layerG">
+          <rect x="0" y="26" width="320" height="14" fill="var(--corneum)"/>
+          <rect x="0" y="40" width="320" height="52" fill="var(--epidermis)"/>
+          <rect x="0" y="92" width="320" height="112" fill="var(--dermis)"/>
+          <rect x="0" y="204" width="320" height="72" fill="var(--subcutis)"/>
+        </g>
+        <path d="M0 88 Q20 82 40 88 T80 88 T120 88 T160 88 T200 88 T240 88 T280 88 T320 88" fill="none" stroke="#A87B58" stroke-width="1.6"/>
+        <g fill="#3E2A1B">
+          <circle cx="34" cy="86" r="2.6"/><circle cx="86" cy="85" r="2.6"/><circle cx="141" cy="87" r="2.6"/>
+          <circle cx="196" cy="85" r="2.6"/><circle cx="249" cy="87" r="2.6"/><circle cx="299" cy="86" r="2.6"/>
+        </g>
+        <g stroke="#C9AE8F" stroke-width=".8" opacity=".75">
+          <path d="M0 52h320M0 64h320M0 76h320"/>
+        </g>
+        <path d="M120 92 q4 44 -2 76 q-3 12 8 14" fill="none" stroke="#B58F70" stroke-width="2"/>
+        <path d="M250 100 q-16 30 4 54 q16 20 -4 44" fill="none" stroke="#B4463C" stroke-width="1.6" opacity=".65"/>
+        <text class="layerlab" x="6" y="36">Stratum corneum</text>
+        <text class="layerlab" x="6" y="56">Epidermis · keratinocytes</text>
+        <text class="layerlab" x="6" y="108">Dermis · collagen, vessels</text>
+        <text class="layerlab" x="6" y="222">Subcutis · fat</text>
+        <g>
+          <line x1="332" y1="30" x2="332" y2="276" stroke="var(--line)" stroke-width="1"/>
+          <g stroke="var(--line)" stroke-width="1">
+            <line x1="332" y1="30" x2="340" y2="30"/><line x1="332" y1="92" x2="340" y2="92"/>
+            <line x1="332" y1="154" x2="340" y2="154"/><line x1="332" y1="216" x2="340" y2="216"/>
+            <line x1="332" y1="276" x2="340" y2="276"/>
+          </g>
+          <text class="ruler" x="344" y="33">0.0 mm</text>
+          <text class="ruler" x="344" y="95">0.8</text>
+          <text class="ruler" x="344" y="157">2.0</text>
+          <text class="ruler" x="344" y="219">4.0</text>
+          <text class="ruler" x="344" y="279">&gt;4.0</text>
+          <text class="ruler" x="344" y="14" style="fill:var(--accent)">BRESLOW</text>
+          <text class="ruler" x="344" y="24">depth scale</text>
+        </g>
+        <g class="pin" data-k="ak" tabindex="0" role="button" aria-label="Actinic keratosis">
+          <line x1="60" y1="46" x2="60" y2="20"/>
+          <circle cx="60" cy="46" r="5" fill="#7A5B3E"/>
+          <text x="46" y="14">AK / Bowen</text>
+        </g>
+        <g class="pin" data-k="scc" tabindex="0" role="button" aria-label="Squamous cell carcinoma">
+          <line x1="163" y1="64" x2="163" y2="20"/>
+          <circle cx="163" cy="64" r="5" fill="#7A5B3E"/>
+          <text x="152" y="14">SCC</text>
+        </g>
+        <g class="pin" data-k="bcc" tabindex="0" role="button" aria-label="Basal cell carcinoma">
+          <line x1="222" y1="88" x2="222" y2="20"/>
+          <circle cx="222" cy="88" r="5" fill="#7A5B3E"/>
+          <text x="210" y="14">BCC</text>
+        </g>
+        <g class="pin" data-k="mel" tabindex="0" role="button" aria-label="Melanoma">
+          <line x1="86" y1="85" x2="86" y2="248"/>
+          <circle cx="86" cy="85" r="5" fill="#7A5B3E"/>
+          <text x="62" y="264">Melanoma</text>
+        </g>
+        <g class="pin" data-k="mcc" tabindex="0" role="button" aria-label="Merkel cell carcinoma">
+          <line x1="285" y1="86" x2="285" y2="248"/>
+          <circle cx="285" cy="86" r="5" fill="#7A5B3E"/>
+          <text x="240" y="264">Merkel cell</text>
+        </g>
+      </svg>
+      <div class="figread" id="figread">
+        <span class="k">Reading the figure</span>
+        <h4>Depth is not decoration</h4>
+        <p>The vertical scale on the right is Breslow thickness — the single strongest predictor of melanoma survival. Select a marker to see which cell each tumour comes from.</p>
+      </div>
+    </figure>
+  </div>
+</div>
+
+<!-- ============ BASIS ============ -->
+<section id="basis">
+  <div class="wrap rail">
+    <div class="rail-side">
+      <span class="eyebrow"><span class="idx">01</span> — Basis</span>
+      <p>Three questions decide the name and the treatment of any skin tumour.</p>
+    </div>
+    <div>
+      <div class="sec-head">
+        <h2>How skin cancers are classified</h2>
+        <p>Classification is not alphabetical or cosmetic. It follows three axes, and every named diagnosis is a point where those three axes meet.</p>
+      </div>
+
+      <div class="cards three">
+        <div class="card">
+          <span class="eyebrow" style="margin-bottom:.5rem">Axis one</span>
+          <h3>Cell of origin</h3>
+          <p>Basal keratinocytes give basal cell carcinoma. Upper keratinocytes give squamous cell carcinoma. Pigment cells give melanoma. Touch-receptor cells give Merkel cell carcinoma. Connective tissue, blood vessels, sweat glands and immune cells each give their own rarer tumour.</p>
+        </div>
+        <div class="card">
+          <span class="eyebrow" style="margin-bottom:.5rem">Axis two</span>
+          <h3>Behaviour</h3>
+          <p>Some grow outward and destroy local tissue but almost never travel — basal cell carcinoma is the classic example. Others enter lymph and blood early. This is why a large basal cell carcinoma can be less dangerous than a small melanoma.</p>
+        </div>
+        <div class="card">
+          <span class="eyebrow" style="margin-bottom:.5rem">Axis three</span>
+          <h3>Depth of invasion</h3>
+          <p>In situ means the tumour has not crossed the basement membrane and cannot spread. Invasive means it has. For melanoma the depth is measured in millimetres (Breslow thickness) and drives the entire staging system.</p>
+        </div>
+      </div>
+
+      <div class="note">
+        <h4>The clinical shorthand: melanoma vs. non-melanoma</h4>
+        <p>Doctors often split skin cancer into <b>melanoma</b> and <b>non-melanoma skin cancer (NMSC)</b>, also called <b>keratinocyte carcinoma</b>. NMSC is far more common; melanoma causes most skin cancer deaths. The split is useful in conversation but hides the rarer tumours, which is why the modern grouping below is by cell of origin.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KERATINOCYTE ============ -->
+<section id="keratinocyte">
+  <div class="wrap rail">
+    <div class="rail-side">
+      <span class="eyebrow"><span class="idx">02</span> — Group one</span>
+      <p>Keratinocyte carcinomas. Roughly nine in ten skin cancers. Rarely fatal, frequently disfiguring if ignored.</p>
+    </div>
+    <div>
+      <div class="sec-head">
+        <h2>Keratinocyte carcinomas</h2>
+        <p>Tumours of the ordinary skin cells that make keratin. They arise almost entirely on sun-exposed sites and are the direct consequence of cumulative ultraviolet damage over decades.</p>
+      </div>
+
+      <div class="cards two">
+
+        <div class="card">
+          <div class="card-top">
+            <svg class="glyph" width="46" height="46"><use href="#g-pearl"/></svg>
+            <div>
+              <span class="tag">Most common human cancer</span>
+              <h3>Basal cell carcinoma (BCC)</h3>
+            </div>
+          </div>
+          <p>Arises from the basal layer at the bottom of the epidermis. Grows slowly over months to years, invades locally, and destroys cartilage and bone if left. Spread to other organs is extremely rare — under one in a thousand.</p>
+          <dl class="spec">
+            <dt>Sites</dt><dd>Nose, eyelid, cheek, ear, forehead, upper trunk</dd>
+            <dt>Look</dt><dd>Pearly or translucent bump with fine surface blood vessels; often a central dip that scabs, heals, and breaks down again</dd>
+            <dt>Tempo</dt><dd>Slow — a sore "that never quite heals" for a year or more</dd>
+            <dt>Spread</dt><dd><span class="risk r-low">Very low</span></dd>
+            <dt>Treat</dt><dd>Excision, Mohs surgery on the face, curettage, topical therapy or radiotherapy for superficial disease</dd>
+          </dl>
+          <ul class="subs">
+            <li><b>Nodular</b> — the classic pearly dome; commonest form.</li>
+            <li><b>Superficial</b> — flat red scaly plaque on the trunk, often mistaken for eczema.</li>
+            <li><b>Morphoeic / infiltrative</b> — a pale scar-like patch with indistinct edges; far larger under the skin than it looks.</li>
+            <li><b>Pigmented</b> — brown or blue-black flecks in a pearly nodule; commonly confused with melanoma.</li>
+            <li><b>Basosquamous</b> — mixed features, behaves more aggressively than ordinary BCC.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <svg class="glyph" width="46" height="46"><use href="#g-scale"/></svg>
+            <div>
+              <span class="tag">Second commonest</span>
+              <h3>Squamous cell carcinoma (SCC)</h3>
+            </div>
+          </div>
+          <p>Arises from the flat keratin-producing cells higher in the epidermis. Grows faster than BCC and can spread to lymph nodes, particularly on the lip, ear and in people on immune-suppressing medication.</p>
+          <dl class="spec">
+            <dt>Sites</dt><dd>Ear rim, lower lip, scalp, back of hands, forearms, lower legs</dd>
+            <dt>Look</dt><dd>Firm rough or crusted lump, often tender; may look wart-like, or open into a shallow ulcer with a raised hard rim</dd>
+            <dt>Tempo</dt><dd>Weeks to months; frequently painful, which BCC usually is not</dd>
+            <dt>Spread</dt><dd><span class="risk r-mid">Low to moderate</span></dd>
+            <dt>Treat</dt><dd>Excision with margins, Mohs for high-risk sites, node assessment and radiotherapy in advanced disease</dd>
+          </dl>
+          <ul class="subs">
+            <li><b>Actinic keratosis</b> — a precursor, not yet cancer: rough sandpapery pink patches on sun-damaged skin, easier to feel than to see. A small percentage progress.</li>
+            <li><b>Bowen's disease</b> — squamous cell carcinoma in situ: a persistent well-defined scaly red plaque, often on the lower leg, that can be mistaken for psoriasis for years.</li>
+            <li><b>Keratoacanthoma</b> — a volcano-shaped nodule with a central keratin plug that erupts in weeks; treated as a well-differentiated SCC.</li>
+            <li><b>Marjolin ulcer</b> — SCC arising in an old burn scar, chronic wound or sinus.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout">
+        <h4>The single most useful non-melanoma rule</h4>
+        <p>Any sore, scab or ulcer on sun-exposed skin that has not fully healed after <b>four weeks</b> should be examined by a doctor. Ordinary wounds heal. Skin cancers cycle — they crust, appear to heal, then break down in the same place.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MELANOMA ============ -->
+<section id="melanoma">
+  <div class="wrap rail">
+    <div class="rail-side">
+      <span class="eyebrow"><span class="idx">03</span> — Group two</span>
+      <p>Melanoma. A minority of cases, the majority of deaths. Curable when thin.</p>
+    </div>
+    <div>
+      <div class="sec-head">
+        <h2>Melanoma</h2>
+        <p>A cancer of melanocytes, the pigment cells sitting along the base of the epidermis. Melanocytes exist wherever pigment exists, so melanoma can appear on skin never exposed to sun, under a nail, in the eye, and on mucosal surfaces. Subtypes are defined by growth pattern and site.</p>
+      </div>
+
+      <div class="cards two">
+
+        <div class="card">
+          <div class="card-top">
+            <svg class="glyph" width="46" height="46"><use href="#g-irregular"/></svg>
+            <div><span class="tag">~70% of melanomas</span><h3>Superficial spreading melanoma</h3></div>
+          </div>
+          <p>Spreads sideways within the epidermis for months or years before invading downward — which is exactly why it is catchable. An irregular, asymmetric patch with more than one colour and a notched or fading border.</p>
+          <dl class="spec">
+            <dt>Sites</dt><dd>Back in men, lower legs in women; any site</dd>
+            <dt>Signal</dt><dd>Change. A mole that is enlarging, darkening unevenly, or newly itching or bleeding</dd>
+            <dt>Spread</dt><dd><span class="risk r-high">High if thick</span></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <svg class="glyph" width="46" height="46"><use href="#g-fast"/></svg>
+            <div><span class="tag">~15% — most dangerous pattern</span><h3>Nodular melanoma</h3></div>
+          </div>
+          <p>Grows downward from the start with no horizontal phase, so it is thick by the time it is noticed. Often symmetrical, evenly coloured and regular-bordered — meaning it fails the classic ABCDE test entirely.</p>
+          <dl class="spec">
+            <dt>Look</dt><dd>Firm dome-shaped lump, black, blue-black, or entirely pink; bleeds or ulcerates readily</dd>
+            <dt>Tempo</dt><dd>Weeks. Elevation and firmness matter more than colour</dd>
+            <dt>Spread</dt><dd><span class="risk r-high">High</span></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <svg class="glyph" width="46" height="46"><use href="#g-flat"/></svg>
+            <div><span class="tag">~10%</span><h3>Lentigo maligna melanoma</h3></div>
+          </div>
+          <p>Arises on chronically sun-damaged skin in older adults. Begins as <b>lentigo maligna</b>, an in-situ stain that widens slowly over 5–20 years before any invasion — often dismissed as an age spot.</p>
+          <dl class="spec">
+            <dt>Sites</dt><dd>Cheek, temple, nose, ear, neck, forearm</dd>
+            <dt>Look</dt><dd>Large flat mottled brown patch with an irregular outline that keeps creeping outward</dd>
+            <dt>Spread</dt><dd><span class="risk r-mid">Low until invasive</span></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <svg class="glyph" width="46" height="46"><use href="#g-nail"/></svg>
+            <div><span class="tag">The one most often missed</span><h3>Acral lentiginous melanoma</h3></div>
+          </div>
+          <p>Occurs on palms, soles and nail beds. It is not caused by sun exposure, and it accounts for a much larger share of melanomas in people with brown and black skin — where it is frequently found late.</p>
+          <dl class="spec">
+            <dt>Sites</dt><dd>Sole of the foot, palm, thumb or great toenail</dd>
+            <dt>Look</dt><dd>Widening brown-black patch on a sole; or a dark longitudinal nail streak that broadens, or whose pigment spreads to the surrounding skin fold</dd>
+            <dt>Spread</dt><dd><span class="risk r-high">High — usually late diagnosis</span></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <svg class="glyph" width="46" height="46"><use href="#g-nodule"/></svg>
+            <div><span class="tag">No pigment</span><h3>Amelanotic melanoma</h3></div>
+          </div>
+          <p>Makes little or no pigment, so it appears pink, red or skin-coloured. It is routinely mistaken for a cyst, a scar or an insect bite. Any pink nodule that grows steadily over weeks deserves the same suspicion as a black one.</p>
+          <dl class="spec">
+            <dt>Look</dt><dd>Pink or flesh-toned nodule, sometimes with a faint brown rim at the base</dd>
+            <dt>Spread</dt><dd><span class="risk r-high">High</span></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <svg class="glyph" width="46" height="46"><use href="#g-patch"/></svg>
+            <div><span class="tag">Uncommon variants</span><h3>Desmoplastic &amp; mucosal melanoma</h3></div>
+          </div>
+          <p><b>Desmoplastic</b> melanoma forms a firm scar-like plaque, often unpigmented, and tends to track along nerves. <b>Mucosal</b> melanoma arises in the mouth, nasal cavity, genital or anal lining, and has no relationship to ultraviolet light. <b>Uveal</b> melanoma of the eye is a separate disease with its own staging.</p>
+          <dl class="spec">
+            <dt>Spread</dt><dd><span class="risk r-high">High — often diagnosed late</span></dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RARE ============ -->
+<section id="rare">
+  <div class="wrap rail">
+    <div class="rail-side">
+      <span class="eyebrow"><span class="idx">04</span> — Group three</span>
+      <p>Tumours of the other cells living in the skin: nerve, immune, vascular and connective tissue.</p>
+    </div>
+    <div>
+      <div class="sec-head">
+        <h2>Rarer skin cancers</h2>
+        <p>Together these make up a small fraction of cases, but several are aggressive and all of them are commonly misread as something harmless on first sight.</p>
+      </div>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>Tumour</th><th>Cell of origin</th><th>Typical presentation</th><th>Behaviour</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Merkel cell carcinoma</b></td>
+              <td>Merkel touch-receptor cells; linked to Merkel cell polyomavirus</td>
+              <td>Painless, firm, fast-growing red-violet nodule on the head, neck or arm of an older or immunosuppressed person</td>
+              <td>Highly aggressive; early nodal spread</td>
+            </tr>
+            <tr>
+              <td><b>Cutaneous T-cell lymphoma</b><br><span class="small">Mycosis fungoides, Sézary syndrome</span></td>
+              <td>Skin-homing T lymphocytes</td>
+              <td>Persistent itchy scaly patches, often on covered skin, treated as eczema or psoriasis for years before diagnosis</td>
+              <td>Usually indolent; can transform</td>
+            </tr>
+            <tr>
+              <td><b>Kaposi sarcoma</b></td>
+              <td>Lymphatic endothelium; driven by human herpesvirus 8</td>
+              <td>Purple, brown or red patches and plaques, classically on the legs or feet; associated with immune suppression</td>
+              <td>Varies by subtype</td>
+            </tr>
+            <tr>
+              <td><b>Dermatofibrosarcoma protuberans</b></td>
+              <td>Dermal fibroblasts</td>
+              <td>Slow, firm, rubbery plaque on the trunk or shoulder that gradually raises into nodules</td>
+              <td>Locally very invasive, rarely metastasises; high recurrence</td>
+            </tr>
+            <tr>
+              <td><b>Sebaceous carcinoma</b></td>
+              <td>Oil gland cells</td>
+              <td>A recurring firm eyelid lump repeatedly diagnosed as a stye or chronic conjunctivitis</td>
+              <td>Aggressive; can spread</td>
+            </tr>
+            <tr>
+              <td><b>Microcystic adnexal &amp; other adnexal carcinomas</b></td>
+              <td>Sweat gland and hair follicle structures</td>
+              <td>Firm, ill-defined skin-coloured plaque, usually on the central face</td>
+              <td>Deeply infiltrative, perineural</td>
+            </tr>
+            <tr>
+              <td><b>Angiosarcoma</b></td>
+              <td>Blood vessel endothelium</td>
+              <td>Bruise-like purple patch on the scalp or face of an older adult, or in a chronically swollen limb after radiotherapy</td>
+              <td>Aggressive</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <h4>Why the rare ones get missed</h4>
+        <p>Almost every tumour in this table first presents as something ordinary — a stye, a bruise, a patch of eczema, a lipoma. The reliable signal is not what it looks like on day one but what it does over time: a benign lesion settles, resolves or stays put; a malignant one keeps changing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SIGNS ============ -->
+<section id="signs">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="idx">05</span> — Recognition</span>
+      <h2>Warning signs, and where each rule fails</h2>
+      <p>The mnemonics below are screening aids, not tests. Each one was designed for a specific pattern and misses others, so they are best used together.</p>
+    </div>
+
+    <div class="mnemonic">
+      <div><span class="letter">A</span><h4>Asymmetry</h4><p>One half does not mirror the other if you fold it down the middle.</p></div>
+      <div><span class="letter">B</span><h4>Border</h4><p>Edges that are notched, scalloped, blurred or bleeding into surrounding skin.</p></div>
+      <div><span class="letter">C</span><h4>Colour</h4><p>More than one shade within a single lesion — brown, black, red, white, blue-grey.</p></div>
+      <div><span class="letter">D</span><h4>Diameter</h4><p>Wider than about 6 mm, roughly a pencil eraser. Melanomas can be smaller.</p></div>
+      <div><span class="letter">E</span><h4>Evolving</h4><p>Any change in size, shape, colour or sensation. The most important letter of the five.</p></div>
+    </div>
+
+    <div class="cards three" style="margin-top:26px">
+      <div class="card">
+        <span class="eyebrow" style="margin-bottom:.5rem">For nodular melanoma</span>
+        <h3>E · F · G</h3>
+        <p>ABCDE misses nodular melanoma, which is often round, one colour and neatly bordered. Use instead: <b>Elevated</b> above the skin, <b>Firm</b> to the touch, and <b>Growing</b> continuously for more than a month.</p>
+      </div>
+      <div class="card">
+        <span class="eyebrow" style="margin-bottom:.5rem">For people with many moles</span>
+        <h3>The ugly duckling</h3>
+        <p>A person's moles usually resemble one another. The one that looks unlike all its neighbours — darker, larger, differently shaped — is worth more attention than any single feature in isolation.</p>
+      </div>
+      <div class="card">
+        <span class="eyebrow" style="margin-bottom:.5rem">For Merkel cell carcinoma</span>
+        <h3>A · E · I · O · U</h3>
+        <p><b>A</b>symptomatic (painless), <b>E</b>xpanding rapidly, <b>I</b>mmune suppression, <b>O</b>lder than 50, <b>U</b>V-exposed fair skin. Three or more of these on a growing nodule warrant urgent assessment.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <h4>Signs that should not wait for a routine appointment</h4>
+      <ul>
+        <li>A mole or patch that has changed in size, shape or colour over recent weeks or months.</li>
+        <li>A lesion that bleeds on its own, without being knocked or scratched.</li>
+        <li>A sore that has not healed in four weeks, or that heals and reopens in the same spot.</li>
+        <li>Any lump growing steadily and firmly over a few weeks, whatever its colour.</li>
+        <li>A new dark stripe under a fingernail or toenail with no remembered injury — particularly if it is widening or the pigment spreads onto the surrounding skin.</li>
+        <li>A new pigmented spot appearing for the first time after roughly age 40.</li>
+      </ul>
+    </div>
+
+    <div class="note">
+      <h4>Skin tone changes where you should look, not whether you should</h4>
+      <p>Skin cancer occurs in every skin tone. In brown and black skin it appears disproportionately on the palms, soles, nail beds and mucous membranes rather than sun-exposed areas, and pigmented lesions can be harder to distinguish against darker background skin. Later diagnosis, not lower incidence, is the reason for worse outcomes. Examine soles, palms, nails, and the mouth.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STAGING ============ -->
+<section id="staging">
+  <div class="wrap rail">
+    <div class="rail-side">
+      <span class="eyebrow"><span class="idx">06</span> — Staging</span>
+      <p>What the numbers after a diagnosis actually measure.</p>
+    </div>
+    <div>
+      <div class="sec-head">
+        <h2>Staging and depth</h2>
+        <p>Staging uses the TNM system: <b>T</b> for the tumour itself, <b>N</b> for lymph nodes, <b>M</b> for distant spread. For melanoma, the T value comes almost entirely from thickness.</p>
+      </div>
+
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Stage</th><th>What it means</th><th>Melanoma measure</th></tr></thead>
+          <tbody>
+            <tr><td><b>Stage 0</b><br><span class="small">In situ</span></td><td>Abnormal cells confined above the basement membrane. Cannot spread.</td><td>Melanoma in situ; excision is usually curative</td></tr>
+            <tr><td><b>Stage I</b></td><td>Invasive but thin, with no nodal involvement.</td><td>Up to 2.0 mm Breslow depth, without ulceration</td></tr>
+            <tr><td><b>Stage II</b></td><td>Thicker or ulcerated, still no nodal spread.</td><td>Above 2.0 mm, or thinner with ulceration</td></tr>
+            <tr><td><b>Stage III</b></td><td>Spread to regional lymph nodes or nearby skin.</td><td>Any thickness with nodal or in-transit disease</td></tr>
+            <tr><td><b>Stage IV</b></td><td>Spread to distant organs — lung, liver, bone, brain.</td><td>Treated systemically with immunotherapy or targeted therapy</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cards two" style="margin-top:22px">
+        <div class="card">
+          <h4>Breslow thickness</h4>
+          <p style="margin-top:8px">A measurement in millimetres from the top of the granular layer to the deepest tumour cell, taken from the biopsy. It determines stage, how wide the surgical margin needs to be, and whether a sentinel lymph node biopsy is offered. Ulceration and mitotic rate refine it further.</p>
+        </div>
+        <div class="card">
+          <h4>Risk stratification for keratinocyte carcinoma</h4>
+          <p style="margin-top:8px">BCC and SCC are usually described as low- or high-risk rather than staged numerically. High-risk features include diameter above 2 cm, location on the ear, lip or central face, poorly defined borders, recurrence after previous treatment, perineural invasion, poor differentiation, and immunosuppression.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHECKER ============ -->
+<section id="checker">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="idx">07</span> — Interactive</span>
+      <h2>Describe what you are seeing</h2>
+      <p>Answer as many questions as apply. This tool matches the features you describe against the patterns above and shows which conditions share them, plus any recognised warning signs in your answers.</p>
+    </div>
+
+    <div class="disclaim">
+      <b>Read this first.</b> This is not a diagnosis and cannot be one. Skin cancer is confirmed only by examination with a dermatoscope and, where needed, a biopsy — several dangerous lesions look completely ordinary to the eye, and several harmless ones look alarming. A low match here does not mean a lesion is safe. If something on your skin is new, changing, or has not healed in four weeks, have it examined regardless of what this page says.
+    </div>
+
+    <form class="form" id="form">
+
+      <fieldset>
+        <legend>Question 01 <span class="q">Where on the body is it?</span></legend>
+        <div class="opts" data-name="site" data-type="single">
+          <label class="opt"><input type="radio" name="site" value="site_face"><span>Face, ear, scalp or neck</span></label>
+          <label class="opt"><input type="radio" name="site" value="site_trunk"><span>Chest, back or shoulders</span></label>
+          <label class="opt"><input type="radio" name="site" value="site_arms"><span>Arms or backs of hands</span></label>
+          <label class="opt"><input type="radio" name="site" value="site_legs"><span>Legs</span></label>
+          <label class="opt"><input type="radio" name="site" value="site_acral"><span>Palm, sole, or under a nail</span></label>
+          <label class="opt"><input type="radio" name="site" value="site_lips"><span>Lip or eyelid</span></label>
+          <label class="opt"><input type="radio" name="site" value="site_covered"><span>Skin rarely exposed to sun</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Question 02 <span class="q">How long has it been there?</span></legend>
+        <div class="opts" data-name="dur" data-type="single">
+          <label class="opt"><input type="radio" name="dur" value="dur_new"><span>Under a month</span></label>
+          <label class="opt"><input type="radio" name="dur" value="dur_mid"><span>One to six months</span></label>
+          <label class="opt"><input type="radio" name="dur" value="dur_long"><span>Six months to two years</span></label>
+          <label class="opt"><input type="radio" name="dur" value="dur_years"><span>Years, and unchanged</span></label>
+          <label class="opt"><input type="radio" name="dur" value="dur_years_changed"><span>Years, but changed recently</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Question 03 <span class="q">What does it look like? Select everything that fits.</span></legend>
+        <div class="opts" data-name="look" data-type="multi">
+          <label class="opt"><input type="checkbox" name="look" value="look_pearly"><span>Pearly or shiny bump with tiny visible blood vessels</span></label>
+          <label class="opt"><input type="checkbox" name="look" value="look_scaly"><span>Rough, dry, sandpapery patch</span></label>
+          <label class="opt"><input type="checkbox" name="look" value="look_wart"><span>Wart-like, crusted or hard lump</span></label>
+          <label class="opt"><input type="checkbox" name="look" value="look_sore"><span>Open sore that will not heal</span></label>
+          <label class="opt"><input type="checkbox" name="look" value="look_flatpigment"><span>Flat brown or black patch</span></label>
+          <label class="opt"><input type="checkbox" name="look" value="look_darkraised"><span>Raised dark mole</span></label>
+          <label class="opt"><input type="checkbox" name="look" value="look_fastnodule"><span>Firm dome-shaped lump growing over weeks</span></label>
+          <label class="opt"><input type="checkbox" name="look" value="look_pinknodule"><span>Pink or flesh-coloured nodule, no pigment</span></label>
+          <label class="opt"><input type="checkbox" name="look" value="look_nailstreak"><span>Dark stripe running along a nail</span></label>
+          <label class="opt"><input type="checkbox" name="look" value="look_patch"><span>Persistent flat red scaly plaque with clear edges</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Question 04 <span class="q">What colour is it? Select everything that fits.</span></legend>
+        <div class="opts" data-name="col" data-type="multi">
+          <label class="opt"><input type="checkbox" name="col" value="col_uniform"><span>One even colour throughout</span></label>
+          <label class="opt"><input type="checkbox" name="col" value="col_multi"><span>Several colours mixed together</span></label>
+          <label class="opt"><input type="checkbox" name="col" value="col_blackblue"><span>Black or blue-black</span></label>
+          <label class="opt"><input type="checkbox" name="col" value="col_redpink"><span>Red or pink</span></label>
+          <label class="opt"><input type="checkbox" name="col" value="col_skin"><span>Skin-coloured or translucent</span></label>
+          <label class="opt"><input type="checkbox" name="col" value="col_white"><span>White, pale or scar-like</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Question 05 <span class="q">What are its edges like?</span></legend>
+        <div class="opts" data-name="bord" data-type="single">
+          <label class="opt"><input type="radio" name="bord" value="bord_even"><span>Even, smooth and sharply defined</span></label>
+          <label class="opt"><input type="radio" name="bord" value="bord_uneven"><span>Uneven, notched or fading into the skin</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Question 06 <span class="q">How big is it?</span></legend>
+        <div class="opts" data-name="size" data-type="single">
+          <label class="opt"><input type="radio" name="size" value="size_small"><span>Smaller than 6 mm</span></label>
+          <label class="opt"><input type="radio" name="size" value="size_large"><span>6 mm or wider</span></label>
+          <label class="opt"><input type="radio" name="size" value="size_growing"><span>Getting visibly bigger</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Question 07 <span class="q">Has it changed in the last three months?</span></legend>
+        <div class="opts" data-name="chg" data-type="multi">
+          <label class="opt"><input type="checkbox" name="chg" value="chg_none"><span>No change at all</span></label>
+          <label class="opt"><input type="checkbox" name="chg" value="chg_grew"><span>Grew wider</span></label>
+          <label class="opt"><input type="checkbox" name="chg" value="chg_color"><span>Changed colour</span></label>
+          <label class="opt"><input type="checkbox" name="chg" value="chg_raised"><span>Became raised or thicker</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Question 08 <span class="q">Any symptoms? Select everything that fits.</span></legend>
+        <div class="opts" data-name="sym" data-type="multi">
+          <label class="opt"><input type="checkbox" name="sym" value="sym_bleed"><span>Bleeds without being knocked</span></label>
+          <label class="opt"><input type="checkbox" name="sym" value="sym_crust"><span>Crusts over, then reopens</span></label>
+          <label class="opt"><input type="checkbox" name="sym" value="sym_itch"><span>Itches</span></label>
+          <label class="opt"><input type="checkbox" name="sym" value="sym_pain"><span>Painful or tender</span></label>
+          <label class="opt"><input type="checkbox" name="sym" value="sym_numb"><span>Numb or tingling</span></label>
+          <label class="opt"><input type="checkbox" name="sym" value="sym_none"><span>No symptoms</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Question 09 <span class="q">Does any of this apply to you?</span></legend>
+        <div class="opts" data-name="risk" data-type="multi">
+          <label class="opt"><input type="checkbox" name="risk" value="risk_prev"><span>Previous skin cancer</span></label>
+          <label class="opt"><input type="checkbox" name="risk" value="risk_fam"><span>Family history of melanoma</span></label>
+          <label class="opt"><input type="checkbox" name="risk" value="risk_moles"><span>More than 50 moles</span></label>
+          <label class="opt"><input type="checkbox" name="risk" value="risk_burns"><span>Severe sunburns or tanning bed use</span></label>
+          <label class="opt"><input type="checkbox" name="risk" value="risk_immuno"><span>Immunosuppressed or transplant recipient</span></label>
+          <label class="opt"><input type="checkbox" name="risk" value="risk_outdoor"><span>Years of outdoor work or sun exposure</span></label>
+          <label class="opt"><input type="checkbox" name="risk" value="risk_fair"><span>Fair skin, freckles, burns easily</span></label>
+          <label class="opt"><input type="checkbox" name="risk" value="risk_none"><span>None of these</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Question 10 <span class="q">How does your skin usually react to strong sun?</span></legend>
+        <div class="opts" data-name="fitz" data-type="single">
+          <label class="opt"><input type="radio" name="fitz" value="fitz_12"><span>Always burns, rarely tans</span></label>
+          <label class="opt"><input type="radio" name="fitz" value="fitz_34"><span>Burns sometimes, tans gradually</span></label>
+          <label class="opt"><input type="radio" name="fitz" value="fitz_56"><span>Rarely burns, tans deeply or dark skin</span></label>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button type="button" class="btn btn-go" id="run">Show matching patterns</button>
+        <button type="button" class="btn btn-clear" id="clear">Clear answers</button>
+      </div>
+    </form>
+
+    <div id="result" aria-live="polite"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>Stratum</h4>
+        <p class="small" style="max-width:44ch">An open reference page on how skin cancers are classified. Written for general readers, students and anyone deciding whether to get something looked at. It does not replace examination by a clinician and holds no record of anything entered into it.</p>
+      </div>
+      <div>
+        <h4>Built on</h4>
+        <ul>
+          <li>WHO Classification of Skin Tumours</li>
+          <li>AJCC staging, 8th edition</li>
+          <li>NICE and NCCN treatment guidance</li>
+          <li>Standard dermatology teaching texts</li>
+        </ul>
+      </div>
+      <div>
+        <h4>If in doubt</h4>
+        <ul>
+          <li>Photograph the lesion beside a ruler</li>
+          <li>Repeat the photo monthly, same light</li>
+          <li>Take both photos to the appointment</li>
+          <li>Ask for a dermatoscope examination</li>
+        </ul>
+      </div>
+    </div>
+    <div class="rule"></div>
+    <p class="small" style="margin:0">Educational reference only. Nothing here is medical advice, and no page can substitute for someone examining your skin.</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
